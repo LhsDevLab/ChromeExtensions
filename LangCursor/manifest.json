@@ -1,12 +1,17 @@
 {
 	"manifest_version": 3,
-	"name": "Hello Extensions",
-	"description": "Base Level Extension",
-	"version": "3.0",
+	"name": "LangCursor",
+	"description": "LangCursor",
+	"version": "1.0",
 	"action": {
 		"default_popup": "popup.html"
 	},
-	"background": {
-		"langChecker": "serviceWorker/dist/index.js"
-	}
+	"permissions": ["scripting"],
+	"host_permissions": ["<all_urls>"],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["dist/toUpperCase.js"]
+		}
+	]
 }
