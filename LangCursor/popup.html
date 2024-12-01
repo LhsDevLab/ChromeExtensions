@@ -1,5 +1,30 @@
+<!DOCTYPE html>
 <html>
+	<head>
+		<title>Language Switcher Settings</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 20px;
+			}
+			h1 {
+				font-size: 20px;
+			}
+			label {
+				display: block;
+				margin-bottom: 10px;
+			}
+			button {
+				margin-top: 10px;
+			}
+		</style>
+	</head>
 	<body>
-		<h1>Hello Extensions</h1>
+		<h1>Set Compose Key Combination</h1>
+		<label for="keyInput">Press a key combination:</label>
+		<input id="keyInput" type="text" readonly />
+		<button id="saveButton">Save Combination</button>
+		<p id="status"></p>
+		<script src="dist/popup.js"></script>
 	</body>
 </html>

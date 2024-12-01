@@ -1,9 +1,12 @@
 import path from "path";
 
 export default {
-	entry: "./src/scripts/toUpperCase.ts",
+	entry: {
+		toUpperCase: "./src/scripts/toUpperCase.ts",
+		popup: "./src/popup.ts",
+	},
 	output: {
-		filename: "toUpperCase.js",
+		filename: "[name].js",
 		path: path.resolve("dist"),
 	},
 	mode: "production",
