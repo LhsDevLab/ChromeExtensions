@@ -55,30 +55,45 @@ document.addEventListener("keydown", (event) => {
 	}
 
 	// Handle character input
-	if (event.key.match(/^[a-zA-Z]$/)) {
-		// Match both lowercase and uppercase letters
-		const input = document.activeElement as HTMLInputElement;
-		if (input && ["INPUT", "TEXTAREA"].includes(input.tagName)) {
+	// Match both lowercase and uppercase letters
+	const input = document.activeElement as HTMLInputElement;
+	if (input && ["INPUT", "TEXTAREA"].includes(input.tagName)) {
+		if (event.key.match(/^[a-zA-Z]$/) && isKoreanMode) {
 			event.preventDefault();
-			const charToConvert = event.key.toLowerCase(); // Convert the key to lowercase for processing
-			if (isKoreanMode) {
-				// Get the last character of the input
-				const lastChar = input.value.slice(-1);
+			// Get the last character of the input
+			const lastChar = input.value.slice(-1);
+			// 쉬프트와 조합되어도 변화 없는 한글 매칭 알파벳은 소문자로 치환
+			const convertedChar = ["Q", "W", "E", "R", "T", "O", "P"].includes(
+				event.key
+			)
+				? event.key
+				: event.key.toLowerCase();
 
-				if (isKorean(lastChar)) {
-					// Combine the last Korean character with the new input
-					const combinedChar = engToKor(
-						korToEng(lastChar + charToConvert)
-					);
-					input.value = input.value.slice(0, -1) + combinedChar;
-				} else {
-					// Append converted Korean directly
-					input.value += engToKor(charToConvert);
-				}
+			if (isKorean(lastChar)) {
+				// Combine the last Korean character with the new input
+				const combinedChar = engToKor(
+					korToEng(lastChar + convertedChar)
+				);
+				input.value = input.value.slice(0, -1) + combinedChar;
 			} else {
-				// Retain English input, keep the original case
-				input.value += event.key;
+				// Append converted Korean directly
+				input.value += engToKor(convertedChar);
 			}
+		}
+		if (isKorean(event.key) && !isKoreanMode) {
+			event.preventDefault();
+			input.value += korToEng(event.key);
+		}
+	}
+});
+
+// Listen for the `input` event to override IME input
+document.addEventListener("input", (event) => {
+	const input = event.target as HTMLInputElement;
+	if (input && ["INPUT", "TEXTAREA"].includes(input.tagName)) {
+		if (!isKoreanMode && isKorean(input.value.slice(-1))) {
+			// Remove the last character if it's Korean
+			input.value = input.value.slice(0, -1);
 		}
 	}
 });
