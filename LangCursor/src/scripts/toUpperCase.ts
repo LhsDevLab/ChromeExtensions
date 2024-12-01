@@ -40,6 +40,7 @@ document.addEventListener("keydown", (event) => {
 	]
 		.filter(Boolean)
 		.join(", ");
+
 	// Check if the pressed key combination matches the saved language switch key
 	if (
 		combinationString === languageSwitchCombination &&
@@ -60,29 +61,57 @@ document.addEventListener("keydown", (event) => {
 	if (input && ["INPUT", "TEXTAREA"].includes(input.tagName)) {
 		if (event.key.match(/^[a-zA-Z]$/) && isKoreanMode) {
 			event.preventDefault();
-			// Get the last character of the input
-			const lastChar = input.value.slice(-1);
-			// 쉬프트와 조합되어도 변화 없는 한글 매칭 알파벳은 소문자로 치환
+
+			// Get the caret position
+			const caretPos = input.selectionStart ?? input.value.length;
+
+			// Get the character to the left of the caret
+			const precedingChar = input.value.charAt(caretPos - 1);
+
+			// Convert the current key to lower case if needed
 			const convertedChar = ["Q", "W", "E", "R", "T", "O", "P"].includes(
 				event.key
 			)
 				? event.key
 				: event.key.toLowerCase();
 
-			if (isKorean(lastChar)) {
-				// Combine the last Korean character with the new input
+			if (isKorean(precedingChar)) {
+				// Combine the preceding Korean character with the new input
 				const combinedChar = engToKor(
-					korToEng(lastChar + convertedChar)
+					korToEng(precedingChar + convertedChar)
 				);
-				input.value = input.value.slice(0, -1) + combinedChar;
+
+				// Replace the preceding character with the combined character
+				input.value =
+					input.value.slice(0, caretPos - 1) +
+					combinedChar +
+					input.value.slice(caretPos);
+
+				// Adjust the caret position
+				input.setSelectionRange(caretPos, caretPos);
 			} else {
-				// Append converted Korean directly
-				input.value += engToKor(convertedChar);
+				// Insert the converted Korean character at the caret position
+				input.value =
+					input.value.slice(0, caretPos) +
+					engToKor(convertedChar) +
+					input.value.slice(caretPos);
+
+				// Move the caret forward
+				input.setSelectionRange(caretPos + 1, caretPos + 1);
 			}
 		}
 		if (isKorean(event.key) && !isKoreanMode) {
 			event.preventDefault();
-			input.value += korToEng(event.key);
+			const caretPos = input.selectionStart ?? input.value.length;
+
+			// Convert the Korean character to English equivalent
+			input.value =
+				input.value.slice(0, caretPos) +
+				korToEng(event.key) +
+				input.value.slice(caretPos);
+
+			// Move the caret forward
+			input.setSelectionRange(caretPos + 1, caretPos + 1);
 		}
 	}
 });
@@ -91,9 +120,14 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("input", (event) => {
 	const input = event.target as HTMLInputElement;
 	if (input && ["INPUT", "TEXTAREA"].includes(input.tagName)) {
-		if (!isKoreanMode && isKorean(input.value.slice(-1))) {
-			// Remove the last character if it's Korean
-			input.value = input.value.slice(0, -1);
+		const caretPos = input.selectionStart ?? input.value.length;
+
+		// Remove the last character if it's Korean and Korean mode is off
+		if (!isKoreanMode && isKorean(input.value.charAt(caretPos - 1))) {
+			input.value =
+				input.value.slice(0, caretPos - 1) +
+				input.value.slice(caretPos);
+			input.setSelectionRange(caretPos - 1, caretPos - 1);
 		}
 	}
 });
