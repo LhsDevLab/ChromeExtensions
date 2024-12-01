@@ -41,7 +41,10 @@ document.addEventListener("keydown", (event) => {
 		.filter(Boolean)
 		.join(", ");
 	// Check if the pressed key combination matches the saved language switch key
-	if (combinationString === languageSwitchCombination) {
+	if (
+		combinationString === languageSwitchCombination &&
+		event.repeat !== true
+	) {
 		toggleKoreanMode(event);
 		return; // Exit the function to avoid interfering with other keys
 	}
