@@ -13,6 +13,7 @@ import {
 
 export class WheelCursor {
 	isActive: Boolean = false;
+	isLeftClicked: Boolean = false;
 	items: CursorItem[];
 	clickedMousePos: Position | null = null;
 	selectedItemNo: number | null = null;
@@ -42,6 +43,11 @@ export class WheelCursor {
 			this.outerDistance * 2
 		);
 		disableIframePointerEvents(document);
+		drawDoughnut(
+			this.cursorCanvas!!,
+			this.innerDistance,
+			this.outerDistance
+		);
 		this.isActive = true;
 	}
 	calculLine(
@@ -72,9 +78,11 @@ export class WheelCursor {
 	}
 	listenMouseEvents(document: Document) {
 		document.addEventListener("mousedown", (event: MouseEvent) => {
-			//event.preventDefault();
-			console.log(event.buttons);
-			this.activateCursor(event.clientX, event.clientY);
+			if (event.button === 0) this.isLeftClicked = true;
+			if (event.button === 2 && this.isLeftClicked) {
+				event.preventDefault();
+				this.activateCursor(event.clientX, event.clientY);
+			}
 		});
 
 		document.addEventListener("mousemove", (event: MouseEvent) => {
@@ -83,21 +91,22 @@ export class WheelCursor {
 					event.clientX,
 					event.clientY
 				);
-				drawDoughnut(
-					this.cursorCanvas!!,
-					this.innerDistance,
-					this.outerDistance
-				);
 				drawLineFromCenter(this.mouseCanvas!!, angle, length);
 			}
 		});
 
 		document.addEventListener("mouseup", (event: MouseEvent) => {
+			if (event.button === 0) this.isLeftClicked = false;
+
 			this.deactivateCursor();
 		});
 
-		document.addEventListener("touchstart", (event: TouchEvent) => {});
+		//document.addEventListener("touchstart", (event: TouchEvent) => {});
 
-		document.addEventListener("touchend", (event: TouchEvent) => {});
+		//document.addEventListener("touchend", (event: TouchEvent) => {});
+
+		document.addEventListener("contextmenu", (event: MouseEvent) => {
+			if (this.isLeftClicked === true) event.preventDefault();
+		});
 	}
 }

@@ -43,7 +43,7 @@ export function drawDoughnut(
 
 	ctx.lineWidth = 0;
 
-	ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 	ctx.fill();
 }
 
