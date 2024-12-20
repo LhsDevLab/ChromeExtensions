@@ -2,11 +2,12 @@ import path from "path";
 
 export default {
 	entry: {
-		"contents-script": "./src/contents-script.ts",
+		contents_script: "./src/contents_script.ts",
+		service_worker: "./src/service_worker.ts",
 	},
 	output: {
 		filename: "[name].js",
-		path: path.resolve("dist"),
+		path: path.resolve("../dist"),
 	},
 	mode: "production",
 	module: {
