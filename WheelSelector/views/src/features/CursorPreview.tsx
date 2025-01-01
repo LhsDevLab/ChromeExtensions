@@ -1,50 +1,36 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { WheelSelector } from "@lhs7/wheel-selector";
 
-export function CursorPreview() {
+export function CursorPreview({ items }: { items: any[] }) {
 	const divRef = useRef<HTMLDivElement>(null);
-
-	const wheelSelector = new WheelSelector({
-		items: [
-			{
-				name: "1",
-				callBack: () => {
-					alert("1");
-				},
-			},
-			{
-				name: "2",
-				callBack: () => {
-					alert("2");
-				},
-			},
-			{
-				name: "3",
-				callBack: () => {
-					alert("3");
-				},
-			},
-		],
-		outerDistance: 200,
-		innerDistance: 100,
-	});
+	const [wheelSelector] = useState<WheelSelector>(
+		new WheelSelector({
+			items: [],
+			outerDistance: 200,
+			innerDistance: 100,
+		})
+	);
 
 	const calculateCenter = () => {
 		if (divRef.current) {
 			const rect = divRef.current.getBoundingClientRect();
 			const centerX = rect.left + rect.width / 2;
 			const centerY = rect.top + rect.height / 2;
-			wheelSelector.deactivateSelector();
+
 			wheelSelector.activateSelector(centerX, centerY);
 		}
 	};
 
 	useEffect(() => {
+		wheelSelector.updateItems(items);
 		calculateCenter();
+	}, [items]);
 
+	useEffect(() => {
+		calculateCenter();
 		window.addEventListener("resize", calculateCenter);
-
 		return () => {
+			wheelSelector.deactivateSelector();
 			window.removeEventListener("resize", calculateCenter);
 		};
 	}, []);

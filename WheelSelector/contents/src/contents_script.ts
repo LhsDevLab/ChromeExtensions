@@ -1,30 +1,23 @@
-import { MouseWheelSelector, SelectorItem } from "@lhs7/wheel-selector";
+import { MouseWheelSelector } from "@lhs7/wheel-selector";
+import { loadList } from "./utils/chromeUtil";
+import { CursorItem } from "./types";
 
-const items: SelectorItem[] = [
-	{
-		name: "1",
-		callBack: () => {
-			alert("1");
-		},
-	},
-	{
-		name: "2",
-		callBack: () => {
-			alert("2");
-		},
-	},
-	{
-		name: "3",
-		callBack: () => {
-			alert("3");
-		},
-	},
-	{
-		name: "4",
-		callBack: () => {
-			alert("4");
-		},
-	},
-];
+let wheelSelector = new MouseWheelSelector({ items: [] });
+function load() {
+	loadList().then((items: CursorItem[]) => {
+		items = items.map((item: CursorItem) => {
+			return {
+				name: item.name,
+				callback: () => {
+					chrome.runtime.sendMessage(item);
+				},
+			};
+		});
 
-const wheelSelector = new MouseWheelSelector(document, { items: items });
+		wheelSelector.updateItems(items as any);
+	});
+}
+
+load();
+
+chrome.storage.onChanged.addListener(load);

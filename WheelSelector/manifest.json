@@ -3,7 +3,7 @@
 	"name": "WheelCursor",
 	"description": "WheelCursor",
 	"version": "1.0",
-	"permissions": ["scripting", "storage"],
+	"permissions": ["scripting", "storage", "tabs"],
 	"host_permissions": ["<all_urls>"],
 	"background": {
 		"service_worker": "dist/service_worker.js"

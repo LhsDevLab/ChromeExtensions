@@ -11,7 +11,7 @@
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
-		"@lhs7/wheel-selector": "0.1.2"
+		"@lhs7/wheel-selector": "file:../../../WheelSelector"
 	},
 	"devDependencies": {
 		"@types/chrome": "^0.0.287",
