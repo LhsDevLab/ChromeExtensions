@@ -49,6 +49,7 @@ export const linkStyle = {
 	color: "#007bff",
 	textDecoration: "underline",
 	marginRight: "8px",
+	overflow: "scroll",
 };
 
 export const selectStyle = {

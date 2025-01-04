@@ -23,7 +23,6 @@ function App() {
 
 	return (
 		<>
-			<h1>Edit Cursor Event</h1>
 			{items.length === 0 ? null : <CursorPreview items={items} />}
 			<CursorItemList items={items} updateItems={updateItems} />
 		</>

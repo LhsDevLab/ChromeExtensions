@@ -6,20 +6,66 @@ chrome.action.onClicked.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener(
-	(item: CursorItem, sender, sendResponse: Function) => {
-		if (item.featureType === FeatureType.Capture) {
-		} else if (item.featureType === FeatureType.HistoryBack) {
-			chrome.tabs.executeScript({ code: "window.history.back()" });
-		} else if (item.featureType === FeatureType.HistoryForward) {
-			chrome.tabs.executeScript({ code: "window.history.forward()" });
-		} else if (item.featureType === FeatureType.NewEmptyTab) {
-			chrome.tabs.create({ url: "chrome://newtab" });
-		} else if (item.featureType === FeatureType.UndoCloseTab) {
-			chrome.sessions.restore();
-		} else if (item.featureType === FeatureType.Link) {
-			chrome.tabs.create({
-				url: item.url,
-			});
+	async (item: CursorItem, sender, sendResponse: Function) => {
+		switch (item.featureType) {
+			case FeatureType.Capture:
+				setTimeout(async () => {
+					try {
+						const captureDataUrl = await captureCurrentTab();
+						chrome.tabs.create({ url: captureDataUrl });
+
+						sendResponse({
+							status: "Capture successful",
+							dataUrl: captureDataUrl,
+						});
+					} catch (error: any) {
+						console.error(
+							"Failed to capture the current tab:",
+							error
+						);
+						sendResponse({
+							status: "Capture failed",
+							error: error.message,
+						});
+					}
+				}, 1);
+
+				break;
+			case FeatureType.HistoryBack:
+				chrome.tabs.executeScript({ code: "window.history.back();" });
+				break;
+			case FeatureType.HistoryForward:
+				chrome.tabs.executeScript({
+					code: "window.history.forward();",
+				});
+				break;
+			case FeatureType.NewEmptyTab:
+				chrome.tabs.create({ url: "chrome://newtab" });
+				break;
+			case FeatureType.UndoCloseTab:
+				chrome.sessions.restore();
+				break;
+			case FeatureType.Link:
+				chrome.tabs.create({
+					url: item.url,
+				});
+				break;
 		}
 	}
 );
+
+async function captureCurrentTab(): Promise<string> {
+	return new Promise((resolve, reject) => {
+		chrome.tabs.captureVisibleTab({ format: "png" }, (dataUrl) => {
+			if (chrome.runtime.lastError || !dataUrl) {
+				reject(
+					new Error(
+						chrome.runtime.lastError?.message || "Capture failed"
+					)
+				);
+			} else {
+				resolve(dataUrl);
+			}
+		});
+	});
+}

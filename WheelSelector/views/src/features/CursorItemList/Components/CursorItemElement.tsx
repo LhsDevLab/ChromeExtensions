@@ -2,9 +2,10 @@ import { CursorItem, FeatureType, LinkItem } from "../../../types/CursorItem";
 import {
 	containerStyle,
 	buttonStyle,
-	featureStyle,
-	linkStyle,
+	dataInputStyle,
+	textInputStyle,
 } from "../styles";
+import { TypeSelect } from "./TypeSelect";
 
 export function CursorItemElement({
 	index,
@@ -12,18 +13,44 @@ export function CursorItemElement({
 	onDelete,
 }: {
 	index: number;
-	item: CursorItem;
+	item: CursorItem | LinkItem;
 	onDelete: Function;
 }) {
 	return (
 		<div style={containerStyle} key={index} draggable="true">
-			<span style={featureStyle}>{item.featureType}</span>
-			<span>{item.name}</span>
-			{item.featureType === FeatureType.Link && (
-				<span style={linkStyle} rel="noopener noreferrer">
-					{(item as LinkItem).url}
-				</span>
-			)}
+			<TypeSelect selected={item.featureType} />
+			{(() => {
+				if (item.featureType === undefined) {
+					return null;
+				} else if (item.featureType === FeatureType.Link) {
+					return (
+						<div style={dataInputStyle}>
+							<input
+								style={Object.assign(textInputStyle, {
+									flex: "1",
+								})}
+								value={item.name}
+								type="text"
+							/>
+							<input
+								style={Object.assign(textInputStyle, {
+									flex: "1",
+								})}
+								value={(item as LinkItem).url}
+								type="text"
+							/>
+						</div>
+					);
+				} else {
+					return (
+						<input
+							style={Object.assign(textInputStyle, { flex: "1" })}
+							value={item.name}
+							type="text"
+						/>
+					);
+				}
+			})()}
 			<button
 				style={buttonStyle}
 				title="Remove this item"
