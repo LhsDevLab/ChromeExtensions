@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(
 							error: error.message,
 						});
 					}
-				}, 1);
+				}, 100);
 
 				break;
 			case FeatureType.HistoryBack:
