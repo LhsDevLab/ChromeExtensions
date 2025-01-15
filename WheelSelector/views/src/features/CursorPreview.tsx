@@ -17,13 +17,12 @@ export function CursorPreview({ items }: { items: any[] }) {
 			const centerX = rect.left + rect.width / 2;
 			const centerY = rect.top + rect.height / 2;
 
-			wheelSelector.activateSelector(centerX, centerY);
+			wheelSelector.activateSelector({ x: centerX, y: centerY });
 		}
 	};
 
 	useEffect(() => {
 		wheelSelector.updateItems(items);
-		calculateCenter();
 	}, [items]);
 
 	useEffect(() => {
