@@ -1,14 +1,17 @@
 import { FeatureType } from "../../../types/CursorItem";
-import { containerStyle, buttonStyle } from "../styles";
+import {
+	containerStyle,
+	buttonStyle,
+	dataInputStyle,
+	textInputStyle,
+} from "../styles";
 import { TypeSelect } from "./TypeSelect";
 import { useState } from "react";
-import { LinkInput } from "./LinkInput";
-import { DefaultInput } from "./DefaultInput";
 
 export function AddButton({ onAddClick }: { onAddClick: Function }) {
+	const [name, setName] = useState<string>("");
 	const [type, setType] = useState<FeatureType>();
 	const [data, setData] = useState<any>({});
-
 	function onTypeChange(type: FeatureType) {
 		setType(type);
 		setData({});
@@ -20,16 +23,42 @@ export function AddButton({ onAddClick }: { onAddClick: Function }) {
 			{(() => {
 				if (type === undefined) {
 					return null;
-				} else if (type === FeatureType.Link) {
-					return <LinkInput setData={setData} />;
 				} else {
-					return <DefaultInput setData={setData} />;
+					return (
+						<div style={dataInputStyle}>
+							<input
+								style={Object.assign(textInputStyle, {
+									flex: "1",
+								})}
+								type="text"
+								placeholder="Name"
+								onChange={(event) =>
+									setName(event.target.value)
+								}
+							/>
+							{type === FeatureType.Link ? (
+								<input
+									style={Object.assign(textInputStyle, {
+										flex: "1",
+									})}
+									type="text"
+									placeholder="Url"
+									onChange={(event) =>
+										setData((prev: any) => ({
+											...prev,
+											url: event.target.value,
+										}))
+									}
+								/>
+							) : null}
+						</div>
+					);
 				}
 			})()}
 			<button
 				style={buttonStyle}
 				onClick={() => {
-					onAddClick(type, data);
+					onAddClick(type, name, data);
 				}}
 				onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
 					Object.assign(e.currentTarget.style, {

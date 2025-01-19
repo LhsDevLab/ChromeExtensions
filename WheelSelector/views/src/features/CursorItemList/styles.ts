@@ -1,3 +1,9 @@
+export const appStyle = {
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+	margin: "40px",
+};
 export const containerStyle = {
 	flex: 1,
 	display: "flex",
@@ -23,6 +29,17 @@ export const dataInputStyle = {
 export const buttonStyle = {
 	margin: "5px",
 	width: "30px",
+	padding: "5px 5px",
+	backgroundColor: "rgb(130, 130, 130)",
+	color: "white",
+	border: "none",
+	borderRadius: "4px",
+	cursor: "pointer",
+};
+
+export const saveStyle = {
+	margin: "5px",
+	width: "100px",
 	padding: "5px 5px",
 	backgroundColor: "rgb(130, 130, 130)",
 	color: "white",
@@ -61,4 +78,12 @@ export const selectStyle = {
 	boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
 	cursor: "pointer",
 	textAlign: "center" as const,
+};
+
+export const dragIconStyle = {
+	marginLeft: "5px",
+	width: "25px",
+	height: "25px",
+	backgroundColor: "rgb(130, 130, 130)",
+	borderRadius: "50%",
 };

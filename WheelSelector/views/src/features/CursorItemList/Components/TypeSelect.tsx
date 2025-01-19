@@ -33,11 +33,11 @@ export function TypeSelect({
 			onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
 				if (onChange) onChange(event.currentTarget.value);
 			}}
-			defaultValue={selected ? selected : ""}
+			defaultValue=""
 			disabled={!!selected} // Disable select if `selected` exists
 		>
 			<option value="" disabled>
-				Select a type...
+				{selected ? selected : "Select a type..."}
 			</option>
 			{TypeList.map((type) => (
 				<option value={type} key={type}>

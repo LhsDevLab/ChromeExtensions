@@ -1,4 +1,4 @@
-import { CursorItem, FeatureType, LinkItem } from "../../../types/CursorItem";
+import { useRef } from "react";
 import {
 	containerStyle,
 	buttonStyle,
@@ -6,6 +6,7 @@ import {
 	textInputStyle,
 } from "../styles";
 import { TypeSelect } from "./TypeSelect";
+import { SelectorItem } from "@lhs7/wheel-selector";
 
 export function CursorItemElement({
 	index,
@@ -13,16 +14,20 @@ export function CursorItemElement({
 	onDelete,
 }: {
 	index: number;
-	item: CursorItem | LinkItem;
+	item: SelectorItem;
 	onDelete: Function;
 }) {
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	console.log(item.name, item.payload.featureType);
+
 	return (
-		<div style={containerStyle} key={index} draggable="true">
-			<TypeSelect selected={item.featureType} />
+		<div ref={containerRef} style={containerStyle} key={index}>
+			<TypeSelect selected={item.payload.featureType} />
 			{(() => {
-				if (item.featureType === undefined) {
+				if (item.payload.featureType === undefined) {
 					return null;
-				} else if (item.featureType === FeatureType.Link) {
+				} else {
 					return (
 						<div style={dataInputStyle}>
 							<input
@@ -31,23 +36,19 @@ export function CursorItemElement({
 								})}
 								value={item.name}
 								type="text"
+								disabled
 							/>
-							<input
-								style={Object.assign(textInputStyle, {
-									flex: "1",
-								})}
-								value={(item as LinkItem).url}
-								type="text"
-							/>
+							{item.payload.url ? (
+								<input
+									style={Object.assign(textInputStyle, {
+										flex: "1",
+									})}
+									value={item.payload.url}
+									type="text"
+									disabled
+								/>
+							) : null}
 						</div>
-					);
-				} else {
-					return (
-						<input
-							style={Object.assign(textInputStyle, { flex: "1" })}
-							value={item.name}
-							type="text"
-						/>
 					);
 				}
 			})()}

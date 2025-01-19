@@ -1,36 +1,40 @@
-import { useRef, useEffect, useState } from "react";
-import { WheelSelector } from "@lhs7/wheel-selector";
+import { useRef, useEffect } from "react";
+import { getWheelSelectorEditor } from "../utils/getWheelSelectorEditor";
+import { SelectorItem } from "@lhs7/wheel-selector";
 
-export function CursorPreview({ items }: { items: any[] }) {
+export function CursorPreview({
+	items,
+	updateItems,
+}: {
+	items: any[];
+	updateItems: (items: any[]) => void;
+}) {
 	const divRef = useRef<HTMLDivElement>(null);
-	const [wheelSelector] = useState<WheelSelector>(
-		new WheelSelector({
-			items: [],
-			outerDistance: 200,
-			innerDistance: 100,
-		})
-	);
-
-	const calculateCenter = () => {
-		if (divRef.current) {
-			const rect = divRef.current.getBoundingClientRect();
-			const centerX = rect.left + rect.width / 2;
-			const centerY = rect.top + rect.height / 2;
-
-			wheelSelector.activateSelector({ x: centerX, y: centerY });
+	const wheelSelector = getWheelSelectorEditor(
+		divRef.current,
+		(items: SelectorItem[]) => {
+			updateItems(items);
 		}
-	};
+	);
 
 	useEffect(() => {
 		wheelSelector.updateItems(items);
+		wheelSelector.calculate_Size_Pos(divRef.current);
 	}, [items]);
 
 	useEffect(() => {
-		calculateCenter();
-		window.addEventListener("resize", calculateCenter);
+		wheelSelector.calculate_Size_Pos(divRef.current);
+	}, [divRef.current]);
+
+	useEffect(() => {
+		function handleResize() {
+			wheelSelector.calculate_Size_Pos(divRef.current);
+		}
+		wheelSelector.calculate_Size_Pos(divRef.current);
+		window.addEventListener("resize", handleResize);
 		return () => {
 			wheelSelector.deactivateSelector();
-			window.removeEventListener("resize", calculateCenter);
+			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
 

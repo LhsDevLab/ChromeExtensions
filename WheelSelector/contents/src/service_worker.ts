@@ -1,4 +1,5 @@
-import { CursorItem, FeatureType } from "./types";
+import { SelectorItem } from "@lhs7/wheel-selector";
+import { FeatureType } from "./types";
 
 chrome.action.onClicked.addListener(() => {
 	const absoluteUrl = chrome.runtime.getURL("dist/index.html");
@@ -6,8 +7,8 @@ chrome.action.onClicked.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener(
-	async (item: CursorItem, sender, sendResponse: Function) => {
-		switch (item.featureType) {
+	async (item: SelectorItem, sender, sendResponse: Function) => {
+		switch (item.payload.featureType) {
 			case FeatureType.Capture:
 				setTimeout(async () => {
 					try {
@@ -47,7 +48,7 @@ chrome.runtime.onMessage.addListener(
 				break;
 			case FeatureType.Link:
 				chrome.tabs.create({
-					url: item.url,
+					url: item.payload.url,
 				});
 				break;
 		}

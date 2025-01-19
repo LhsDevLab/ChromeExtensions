@@ -1,4 +1,4 @@
-import { CursorItem } from "../types/CursorItem";
+import { SelectorItem } from "@lhs7/wheel-selector";
 
 export async function loadList() {
 	const res = await chrome.storage.local.get("featureList");
@@ -8,7 +8,7 @@ export async function loadList() {
 	return res.featureList;
 }
 
-export async function saveList(list: CursorItem[]) {
+export async function saveList(list: SelectorItem[]) {
 	const res = await chrome.storage.local.set({ featureList: list });
 	return res;
 }
