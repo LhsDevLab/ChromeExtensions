@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "WheelCursor",
-	"description": "WheelCursor",
+	"description": "Mouse WheelCursor",
 	"version": "1.0",
 	"permissions": ["scripting", "storage", "tabs", "sessions", "activeTab"],
 	"host_permissions": ["<all_urls>"],
