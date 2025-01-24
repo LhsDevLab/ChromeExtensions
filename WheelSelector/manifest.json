@@ -3,7 +3,7 @@
 	"name": "WheelSelector",
 	"description": "You can edit actions on a wheel-shaped UI and run it in your Chrome browser.",
 	"version": "1.0",
-	"permissions": ["scripting", "storage", "tabs"],
+	"permissions": ["storage", "tabs", "sessions"],
 	"host_permissions": ["<all_urls>"],
 	"background": {
 		"service_worker": "dist/service_worker.js"
