@@ -10,7 +10,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@lhs7/wheel-selector": "0.2.5",
+		"@lhs7/wheel-selector": "0.2.6",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"uid": "^2.0.2"
